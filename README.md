@@ -1,30 +1,37 @@
 # RainGuard
 
-ระบบพยากรณ์ความเสี่ยงฝนวันพรุ่งนี้ สำหรับตัดสินใจพ่นสาร ให้น้ำ หรือเลื่อนเก็บเกี่ยว
+ระบบพยากรณ์ว่าวันพรุ่งนี้ฝนจะตกหรือไม่ เพื่อให้เกษตรกรตัดสินใจพ่นสาร ให้น้ำ หรือเลื่อนเก็บเกี่ยว
 
-กลุ่มหลอ รายวิชา CP413008 — จักรภัทร เวียงสิมมา, สรวิศ สำราญบึงแก, พรหมพัฒน ศิริภัคกุลวัฒน์
+รายวิชา CP413008 Machine Learning Engineering for Production ภาคเรียนที่ 1/2569
 
-รีโปที่ส่ง: https://github.com/ppppppwaqrd/CP413008-rainguard
+กลุ่ม 2 ชื่อกลุ่ม **หลอ**
 
-สาขาที่ส่งคือ `main` อย่า merge Pull Request 5 เพราะนั่นคือรอบที่ CI ต้องไม่ผ่าน
+- จักรภัทร เวียงสิมมา 673380308-6 หมู่ 1
+- สรวิศ สำราญบึงแก 673380348-4 หมู่ 1
+- พรหมพัฒน ศิริภัคกุลวัฒน์ 673380328-0 หมู่ 2
 
-## เปิดโฟลเดอร์ไหน
+สาขาที่ส่งคือ `main` รายงานฉบับเต็มอยู่ที่ [`report/REPORT.md`](report/REPORT.md)
 
-- `report/REPORT.md` รายงานกับสคริปต์พูด 12 นาที
-- `reports/` ตัวเลขวันนำเสนอ เปิด `experiments.json`, `slo.json`, `retrain_cycle.json`, `rollback.json`, `ci_fail.txt`
-- `examples/predict.json` คำขอปกติ และ `examples/bad_predict.json` คำขอที่ต้องได้ 422
-- `src/rainguard/` โค้ดเทรน สัญญาข้อมูล และตัวแปลงที่ใช้ทั้งตอนเทรนและตอนเสิร์ฟ
-- `serving/app.py` API
-- `dags/rain_train.py` DAG ของ Airflow เรียกฟังก์ชันชุดเดียวกับคำสั่ง `python -m rainguard.cli run`
-- `monitoring/` Prometheus กับ Grafana
-- `scripts/` ดาวน์โหลดข้อมูล วัด latency เทรนใหม่ และย้อนกลับโมเดล
-- `tests/` ชุดที่ GitHub Actions รัน
+## ผลที่ใช้ส่ง
 
-โฟลเดอร์ `.venv`, `data/weatherAUS.csv`, `mlruns` และ `artifacts` อยู่ในเครื่องที่ใช้เทรน ไม่ได้อยู่ใน git
+โมเดลที่ให้บริการคือ hist_gb เวอร์ชัน 2
+
+- ROC-AUC 0.8877 และ recall ของคลาสฝน 0.8246 บนชุดทดสอบถึงวันที่ 30 มกราคม 2026
+- ต้นทุนพลาดฝน 5 หน่วยต่อเตือนผิด 1 หน่วย อยู่ที่ 15,004 ต่ำกว่าการไม่เตือนเลย (43,220) และการเตือนทุกวัน (33,375)
+- API ใน Docker: p50 41.2 ms, p95 68.1 ms, throughput 20.30 คำขอต่อวินาที ผ่าน SLO ที่ประกาศไว้
+- ปริมาณฝนติดลบถูกปฏิเสธก่อนถึงโมเดล API ตอบ 422
+
+ตัวเลขอยู่ใน `reports/experiments.json`, `reports/slo.json`, `reports/rollback.json`
+
+## วิธีตรวจงานนี้บน GitHub
+
+งานบน `main` ผ่าน GitHub Actions แล้ว ทั้งคุณภาพโค้ด สัญญาข้อมูล และคุณภาพโมเดล
+
+Pull Request ที่ยังเปิดอยู่ชื่อ **Show CI rejecting a loosened rainfall contract** เป็นหลักฐานรอบที่ข้อมูลเสียแล้ว CI ไม่ผ่าน อย่า merge อันนั้น ถ้า merge ขอบล่างของปริมาณฝนจะหลุด และ `main` จะยอมรับค่าติดลบ
 
 ## รันจากเครื่องเปล่า
 
-ต้องมี Python 3.11 ขึ้นไป และ Docker ถ้าจะเปิด API กับ Grafana
+ต้องมี Python 3.11 ขึ้นไป ถ้าจะเปิด API ทั้งสแตกต้องมี Docker
 
 ```powershell
 python -m venv .venv
@@ -34,7 +41,9 @@ python scripts/download_data.py
 python -m rainguard.cli run
 ```
 
-คำสั่ง `python -m rainguard.cli run` คือเส้นทางเดียวจากไฟล์ดิบถึงโมเดลที่พร้อมเสิร์ฟ: ตรวจสัญญาข้อมูล แบ่งตามเวลา เทรน 3 โมเดล บันทึก MLflow ผ่านด่าน blessing แล้วคัดลอกโมเดลขึ้น `artifacts/serving`
+คำสั่ง `python -m rainguard.cli run` เดินจากไฟล์ดิบถึงโมเดลที่พร้อมเสิร์ฟ: ตรวจสัญญาข้อมูล แบ่งตามเวลา เทรน 3 โมเดล บันทึก MLflow ผ่านด่าน blessing แล้วคัดลอกโมเดลขึ้น `artifacts/serving`
+
+ไฟล์ข้อมูลดิบประมาณ 30 MB, `mlruns` และ `artifacts` ไม่ได้อยู่ใน git ผู้รับต้องดาวน์โหลดข้อมูลแล้วรันคำสั่งด้านบน
 
 ถ้าส่งไฟล์เสีย ระบบหยุดก่อนเทรนและเขียน `alerts/validation_error.txt`
 
@@ -43,17 +52,7 @@ python scripts/make_bad_data.py
 python -m rainguard.cli validate --data data/bad_weather.csv
 ```
 
-## ให้บริการและวัด SLO
-
-```powershell
-python scripts/loadtest.py
-python scripts/retrain_cycle.py
-python scripts/rollback.py
-```
-
-`loadtest.py` เปิด API ที่พอร์ต 8000 วัด latency แล้วปิดโปรเซสเอง
-
-เปิดทั้งสแตก (API, MLflow, Prometheus, Grafana):
+## ให้บริการ
 
 ```powershell
 docker compose up --build
@@ -62,34 +61,31 @@ docker compose up --build
 - API: http://127.0.0.1:8000/health
 - MLflow: http://127.0.0.1:5000
 - Prometheus: http://127.0.0.1:9090
-- Grafana: http://127.0.0.1:3000 (admin / admin)
+- Grafana: http://127.0.0.1:3000 ชื่อผู้ใช้ `admin` รหัส `admin`
 
-Airflow ใช้โปรไฟล์แยก เพราะอิมเมจใหญ่กว่า:
+วัด latency ของคอนเทนเนอร์ที่เปิดอยู่แล้ว:
+
+```powershell
+python scripts/loadtest.py --base http://127.0.0.1:8000
+```
+
+Airflow ใช้โปรไฟล์แยก DAG `rainguard_train` เรียกฟังก์ชันชุดเดียวกับคำสั่ง `run`
 
 ```powershell
 docker compose --profile airflow up --build airflow
 ```
 
-DAG `rainguard_train` เรียกฟังก์ชันชุดเดียวกับคำสั่ง `run` และตั้งเวลาทุกวันจันทร์ 06:00
+## แผนที่โฟลเดอร์
 
-## ทดสอบ
+- `report/REPORT.md` รายงาน
+- `reports/` ตัวเลขและหลักฐาน CI
+- `examples/predict.json` คำขอปกติ `examples/bad_predict.json` คำขอที่ต้องได้ 422
+- `src/rainguard/` สัญญาข้อมูล ตัวแปลงร่วม และโค้ดเทรน
+- `serving/app.py` API
+- `dags/rain_train.py` DAG
+- `monitoring/` Prometheus กับ Grafana
+- `scripts/` ดาวน์โหลดข้อมูล วัด latency เทรนใหม่ และย้อนกลับโมเดล
+- `tests/` ชุดที่ GitHub Actions รัน
+- `.github/workflows/ci.yml` ตรวจสามด้าน: ruff, สัญญาข้อมูล, คุณภาพโมเดล
 
-```powershell
-ruff check src tests serving scripts dags
-pytest
-python scripts/ci_gate.py
-```
-
-หลักฐานที่ข้อมูลเสียแล้วไม่ผ่านอยู่ที่ `reports/ci_fail.txt` หลักฐานรอบที่ผ่านอยู่ที่ `reports/ci_pass.txt`
-
-รายงานฉบับเต็มอยู่ที่ `report/REPORT.md`
-
-## ผลที่วัดได้บนเครื่องนี้
-
-- hist_gb ขึ้น Production เวอร์ชัน 2, ROC-AUC 0.8877, recall 0.8246 บนชุดทดสอบถึงวันที่ 2026-01-30
-- API ในคอนเทนเนอร์: p50 41.2 ms, p95 68.1 ms, throughput 20.30 คำขอต่อวินาที (`reports/slo.json`)
-- รอบ uvicorn บนโฮสต์: p50 62.2 ms, p95 84.2 ms, throughput 15.36 คำขอต่อวินาที (`reports/slo_host.json`)
-- ย้อนกลับทะเบียนจากเวอร์ชัน 4 ไปเวอร์ชัน 2 แล้ว `/health` ตอบเวอร์ชัน 2
-
-วัด SLO รอบคอนเทนเนอร์ด้วย `python scripts/loadtest.py --base http://127.0.0.1:8000` ขณะที่ `docker compose up --build` เปิดบริการอยู่
-
+ใช้ Cursor ช่วยเขียนโค้ดและร่างรายงาน รายละเอียดอยู่ในท้าย `report/REPORT.md`

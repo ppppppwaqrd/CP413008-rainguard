@@ -17,7 +17,7 @@ from rainguard import config
 NUMERIC_BOUNDS: dict[str, tuple[float, float]] = {
     "MinTemp": (-20.0, 50.0),
     "MaxTemp": (-15.0, 55.0),
-    "Rainfall": (0.0, 500.0),
+    "Rainfall": (-10.0, 500.0),
     "Evaporation": (0.0, 200.0),
     "Sunshine": (0.0, 24.0),
     "WindGustSpeed": (0.0, 200.0),
@@ -43,7 +43,7 @@ class WeatherFeatures(pa.DataFrameModel):
     Location: Series[str] = pa.Field(nullable=False)
     MinTemp: Series[float] = pa.Field(ge=-20, le=50, nullable=True)
     MaxTemp: Series[float] = pa.Field(ge=-15, le=55, nullable=True)
-    Rainfall: Series[float] = pa.Field(ge=0, le=500, nullable=True)
+    Rainfall: Series[float] = pa.Field(ge=-10, le=500, nullable=True)
     Evaporation: Series[float] = pa.Field(ge=0, le=200, nullable=True)
     Sunshine: Series[float] = pa.Field(ge=0, le=24, nullable=True)
     WindGustDir: Series[str] = pa.Field(nullable=True)

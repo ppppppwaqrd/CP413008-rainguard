@@ -47,16 +47,40 @@ def _payload() -> dict:
     return cleaned
 
 
+def _wait_existing(base: str) -> None:
+    for _ in range(60):
+        try:
+            response = requests.get(f"{base}/health", timeout=2)
+            if response.status_code == 200:
+                return
+        except requests.RequestException:
+            time.sleep(0.5)
+    raise RuntimeError("API did not become ready")
+
+
 def main() -> None:
+    import argparse
     import subprocess
 
-    base = "http://127.0.0.1:8000"
-    process = subprocess.Popen(
-        [sys.executable, "-m", "uvicorn", "serving.app:app", "--host", "127.0.0.1", "--port", "8000", "--log-level", "warning"],
-        cwd=config.ROOT,
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--base",
+        default="",
+        help="Measure an API that is already running, such as the Docker container on port 8000.",
     )
+    args = parser.parse_args()
+    base = args.base or "http://127.0.0.1:8000"
+    process = None
+    if not args.base:
+        process = subprocess.Popen(
+            [sys.executable, "-m", "uvicorn", "serving.app:app", "--host", "127.0.0.1", "--port", "8000", "--log-level", "warning"],
+            cwd=config.ROOT,
+        )
     try:
-        _wait_until_ready(base, process)
+        if process is None:
+            _wait_existing(base)
+        else:
+            _wait_until_ready(base, process)
         payload = _payload()
         rejected = dict(payload)
         rejected["Rainfall"] = -5
@@ -94,6 +118,8 @@ def main() -> None:
             },
             "model_name": health.get("model_name"),
             "model_version": health.get("model_version"),
+            "runtime": "docker" if args.base else "host-uvicorn",
+            "base_url": base,
         }
         report["p50_pass"] = report["p50_ms"] <= config.P50_SLO_MS
         report["p95_pass"] = report["p95_ms"] <= config.P95_SLO_MS
@@ -101,11 +127,12 @@ def main() -> None:
         dump_json(config.REPORT_DIR / "slo.json", report)
         print(report)
     finally:
-        process.terminate()
-        try:
-            process.wait(timeout=10)
-        except subprocess.TimeoutExpired:
-            process.kill()
+        if process is not None:
+            process.terminate()
+            try:
+                process.wait(timeout=10)
+            except subprocess.TimeoutExpired:
+                process.kill()
 
 
 if __name__ == "__main__":

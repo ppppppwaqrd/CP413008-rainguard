@@ -1,0 +1,18 @@
+{
+  "health": {
+    "status": "ok",
+    "model_name": "hist_gb",
+    "model_version": "2",
+    "threshold": 0.4499999999999999,
+    "slo": {
+      "p50_ms": 100.0,
+      "p95_ms": 150.0,
+      "min_throughput_rps": 10.0
+    }
+  },
+  "bad_predict_status": 422,
+  "bad_predict_body": {
+    "decision": "rejected_by_schema_gate",
+    "errors": "validation failed\n- column=Rainfall check=greater_than_or_equal_to(0) row=0 value=-5.0\ntotal_failures=1"
+  }
+}

@@ -69,8 +69,9 @@ python scripts/ci_gate.py
 ## ผลที่วัดได้บนเครื่องนี้
 
 - hist_gb ขึ้น Production เวอร์ชัน 2, ROC-AUC 0.8877, recall 0.8246 บนชุดทดสอบถึงวันที่ 2026-01-30
-- p50 62.2 ms, p95 84.2 ms, throughput 15.36 คำขอต่อวินาที
+- API ในคอนเทนเนอร์: p50 41.2 ms, p95 68.1 ms, throughput 20.30 คำขอต่อวินาที (`reports/slo.json`)
+- รอบ uvicorn บนโฮสต์: p50 62.2 ms, p95 84.2 ms, throughput 15.36 คำขอต่อวินาที (`reports/slo_host.json`)
 - ย้อนกลับทะเบียนจากเวอร์ชัน 4 ไปเวอร์ชัน 2 แล้ว `/health` ตอบเวอร์ชัน 2
 
-`docker compose` พร้อมใช้เมื่อ Docker Desktop เปิดอยู่ ตอนวัดรอบนี้เอ็นจินของ Docker ยังไม่ทำงาน จึงวัด API ผ่าน uvicorn บนโฮสต์
+วัด SLO รอบคอนเทนเนอร์ด้วย `python scripts/loadtest.py --base http://127.0.0.1:8000` ขณะที่ `docker compose up --build` เปิดบริการอยู่
 

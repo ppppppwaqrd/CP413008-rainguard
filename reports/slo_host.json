@@ -1,7 +1,7 @@
 {
-  "p50_ms": 41.174,
-  "p95_ms": 68.125,
-  "throughput_rps": 20.3,
+  "p50_ms": 62.201,
+  "p95_ms": 84.172,
+  "throughput_rps": 15.36,
   "requests": 200,
   "slo": {
     "p50_ms": 100.0,
@@ -10,8 +10,6 @@
   },
   "model_name": "hist_gb",
   "model_version": "2",
-  "runtime": "docker",
-  "base_url": "http://127.0.0.1:8000",
   "p50_pass": true,
   "p95_pass": true,
   "throughput_pass": true

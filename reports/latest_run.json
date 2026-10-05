@@ -1,0 +1,82 @@
+{
+  "run": "C:\\Users\\jakkr\\OneDrive\\เดสก์ท็อป\\ML\\project\\rainguard\\artifacts\\runs\\20261005T164536Z",
+  "blessed": true,
+  "winner": "hist_gb",
+  "candidates": [
+    {
+      "name": "logreg",
+      "blessed": true,
+      "gates": {
+        "floor_ok": true,
+        "recall_ok": true,
+        "size_ok": true,
+        "improve_ok": true,
+        "improvement": null,
+        "roc_auc": 0.8711956768523381,
+        "pos_recall": 0.8536557149467839,
+        "model_mb": 0.0072,
+        "min_roc_auc": 0.75,
+        "min_pos_recall": 0.7,
+        "max_model_mb": 25.0
+      },
+      "roc_auc": 0.8711956768523381,
+      "recall": 0.8536557149467839,
+      "model_mb": 0.0072
+    },
+    {
+      "name": "hist_gb",
+      "blessed": true,
+      "gates": {
+        "floor_ok": true,
+        "recall_ok": true,
+        "size_ok": true,
+        "improve_ok": true,
+        "improvement": 0.016541331087182143,
+        "roc_auc": 0.8877370079395203,
+        "pos_recall": 0.8246182322998612,
+        "model_mb": 0.5793,
+        "min_roc_auc": 0.75,
+        "min_pos_recall": 0.7,
+        "max_model_mb": 25.0
+      },
+      "roc_auc": 0.8877370079395203,
+      "recall": 0.8246182322998612,
+      "model_mb": 0.5793
+    },
+    {
+      "name": "random_forest",
+      "blessed": false,
+      "gates": {
+        "floor_ok": true,
+        "recall_ok": true,
+        "size_ok": true,
+        "improve_ok": false,
+        "improvement": -0.014882910706826902,
+        "roc_auc": 0.8563127661455112,
+        "pos_recall": 0.8347987043035632,
+        "model_mb": 3.2332,
+        "min_roc_auc": 0.75,
+        "min_pos_recall": 0.7,
+        "max_model_mb": 25.0
+      },
+      "roc_auc": 0.8563127661455112,
+      "recall": 0.8347987043035632,
+      "model_mb": 3.2332
+    }
+  ],
+  "production_version": "2",
+  "promoted": true,
+  "split": {
+    "split": "time",
+    "reason": "RainTomorrow is a forecast, so later dates stay out of training.",
+    "train_end": "2021-01-02",
+    "val_end": "2023-07-18",
+    "test_end": "2026-01-30",
+    "train_rows": 183841,
+    "val_rows": 41457,
+    "test_rows": 42019,
+    "train_positive_rate": 0.21623032946948723,
+    "dropped_unlabeled": 8093,
+    "n_features": 125
+  }
+}

@@ -6,6 +6,22 @@
 
 รีโปที่ส่ง: https://github.com/ppppppwaqrd/CP413008-rainguard
 
+สาขาที่ส่งคือ `main` อย่า merge Pull Request 5 เพราะนั่นคือรอบที่ CI ต้องไม่ผ่าน
+
+## เปิดโฟลเดอร์ไหน
+
+- `report/REPORT.md` รายงานกับสคริปต์พูด 12 นาที
+- `reports/` ตัวเลขวันนำเสนอ เปิด `experiments.json`, `slo.json`, `retrain_cycle.json`, `rollback.json`, `ci_fail.txt`
+- `examples/predict.json` คำขอปกติ และ `examples/bad_predict.json` คำขอที่ต้องได้ 422
+- `src/rainguard/` โค้ดเทรน สัญญาข้อมูล และตัวแปลงที่ใช้ทั้งตอนเทรนและตอนเสิร์ฟ
+- `serving/app.py` API
+- `dags/rain_train.py` DAG ของ Airflow เรียกฟังก์ชันชุดเดียวกับคำสั่ง `python -m rainguard.cli run`
+- `monitoring/` Prometheus กับ Grafana
+- `scripts/` ดาวน์โหลดข้อมูล วัด latency เทรนใหม่ และย้อนกลับโมเดล
+- `tests/` ชุดที่ GitHub Actions รัน
+
+โฟลเดอร์ `.venv`, `data/weatherAUS.csv`, `mlruns` และ `artifacts` อยู่ในเครื่องที่ใช้เทรน ไม่ได้อยู่ใน git
+
 ## รันจากเครื่องเปล่า
 
 ต้องมี Python 3.11 ขึ้นไป และ Docker ถ้าจะเปิด API กับ Grafana

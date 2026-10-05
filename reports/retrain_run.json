@@ -1,0 +1,53 @@
+{
+  "run": "C:\\Users\\jakkr\\OneDrive\\เดสก์ท็อป\\ML\\project\\rainguard\\artifacts\\runs\\retrain-after-alert",
+  "blessed": true,
+  "winner": "hist_gb",
+  "candidates": [
+    {
+      "name": "hist_gb",
+      "blessed": true,
+      "gates": {
+        "floor_ok": true,
+        "recall_ok": true,
+        "size_ok": true,
+        "improve_ok": true,
+        "improvement": 0.00030591933682500017,
+        "roc_auc": 0.8880429272763453,
+        "pos_recall": 0.8638250761140327,
+        "model_mb": 0.5788,
+        "min_roc_auc": 0.75,
+        "min_pos_recall": 0.7,
+        "max_model_mb": 25.0
+      },
+      "roc_auc": 0.8880429272763453,
+      "recall": 0.8638250761140327,
+      "model_mb": 0.5788
+    }
+  ],
+  "production_version": "4",
+  "promoted": true,
+  "split": {
+    "split": "time",
+    "reason": "RainTomorrow is a forecast, so later dates stay out of training.",
+    "train_end": "2024-01-19",
+    "val_end": "2025-01-24",
+    "test_end": "2026-01-30",
+    "train_rows": 78729,
+    "val_rows": 16745,
+    "test_rows": 16891,
+    "train_positive_rate": 0.2312108625792275,
+    "dropped_unlabeled": 0
+  },
+  "retrain_window": {
+    "split": "time",
+    "reason": "RainTomorrow is a forecast, so later dates stay out of training.",
+    "train_end": "2024-01-19",
+    "val_end": "2025-01-24",
+    "test_end": "2026-01-30",
+    "train_rows": 78729,
+    "val_rows": 16745,
+    "test_rows": 16891,
+    "train_positive_rate": 0.2312108625792275,
+    "dropped_unlabeled": 0
+  }
+}

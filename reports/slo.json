@@ -1,0 +1,16 @@
+{
+  "p50_ms": 62.201,
+  "p95_ms": 84.172,
+  "throughput_rps": 15.36,
+  "requests": 200,
+  "slo": {
+    "p50_ms": 100.0,
+    "p95_ms": 150.0,
+    "min_throughput_rps": 10.0
+  },
+  "model_name": "hist_gb",
+  "model_version": "2",
+  "p50_pass": true,
+  "p95_pass": true,
+  "throughput_pass": true
+}

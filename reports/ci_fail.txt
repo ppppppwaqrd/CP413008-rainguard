@@ -1,0 +1,10 @@
+command=C:\Users\jakkr\OneDrive\เดสก์ท็อป\ML\project\rainguard\.venv\Scripts\python.exe -m rainguard.cli validate --data C:\Users\jakkr\OneDrive\เดสก์ท็อป\ML\project\rainguard\data\bad_weather.csv
+exit_code=1
+validation failed
+- column=Location check=not_nullable row=3 value=nan
+- column=Rainfall check=greater_than_or_equal_to(0) row=0 value=-5.0
+- column=Humidity3pm check=less_than_or_equal_to(100) row=1 value=150.0
+- column=RainTomorrow check=isin(['Yes', 'No']) row=2 value=Maybe
+total_failures=4
+
+

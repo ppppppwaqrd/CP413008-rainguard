@@ -1,0 +1,38 @@
+groups:
+  - name: rainguard
+    rules:
+      - alert: RainGuardHighLatency
+        expr: |
+          histogram_quantile(
+            0.95,
+            sum(rate(rainguard_request_latency_seconds_bucket{endpoint="predict"}[5m])) by (le)
+          ) > 0.15
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "p95 latency is above the 150ms SLO"
+
+      - alert: RainGuardSchemaRejections
+        expr: sum(rate(rainguard_schema_rejected_total[5m])) > 0
+        for: 0s
+        labels:
+          severity: warning
+        annotations:
+          summary: "The schema gate is rejecting requests"
+
+      - alert: RainGuardDataDrift
+        expr: rainguard_drift_share >= 0.30
+        for: 0s
+        labels:
+          severity: ticket
+        annotations:
+          summary: "Data drift share reached 0.30. Start a retrain review."
+
+      - alert: RainGuardConceptDrift
+        expr: rainguard_realized_recall < 0.60
+        for: 0s
+        labels:
+          severity: ticket
+        annotations:
+          summary: "Realized rain recall is under 0.60 while this gauge is scraped."

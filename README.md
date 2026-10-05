@@ -77,7 +77,8 @@ docker compose --profile airflow up --build airflow
 
 ## แผนที่โฟลเดอร์
 
-- `report/REPORT.md` รายงาน
+- `report/REPORT.md` รายงานที่ส่ง
+- `presenting/` โน้ตของกลุ่มสำหรับวันพูด ไม่ใช่ตัวรายงาน
 - `reports/` ตัวเลขและหลักฐาน CI
 - `examples/predict.json` คำขอปกติ `examples/bad_predict.json` คำขอที่ต้องได้ 422
 - `src/rainguard/` สัญญาข้อมูล ตัวแปลงร่วม และโค้ดเทรน

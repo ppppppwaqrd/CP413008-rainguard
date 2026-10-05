@@ -153,13 +153,29 @@ GitHub Actions ใน `.github/workflows/ci.yml` แยกสามงาน
 
 หลักฐานบนเครื่องอยู่ใน `reports/ci_pass.txt` และ `reports/ci_fail.txt` ไฟล์หลังคือการยิง `python -m rainguard.cli validate` ใส่ข้อมูลที่ฝนติดลบ แล้วกระบวนการจบด้วยรหัสไม่ใช่ 0 งาน CI ถือว่ารอบนี้ผ่านก็ต่อเมื่อเกตปฏิเสธไฟล์เสียได้
 
+หลักฐานบน GitHub Actions
+
+- รอบที่ผ่านบน `main` หลังรวมผลจากคอนเทนเนอร์: https://github.com/ppppppwaqrd/CP413008-rainguard/actions/runs/37350589337 งานคุณภาพโค้ด สัญญาข้อมูล และคุณภาพโมเดลผ่านทั้งสามงาน
+- รอบที่ไม่ผ่านคือ Pull Request ที่ลดขอบล่างของปริมาณฝนจาก 0 เป็น -10 ทำให้ค่า -5 ไม่ถูกปฏิเสธ งานสัญญาข้อมูลและงานคุณภาพโมเดลเป็นสีแดง: https://github.com/ppppppwaqrd/CP413008-rainguard/pull/5 และ https://github.com/ppppppwaqrd/CP413008-rainguard/actions/runs/37350815364 Pull Request นี้ไม่ถูก merge `main` ยังปฏิเสธฝนติดลบ
+
 ## 7. Pipeline การทำซ้ำ และ Git
 
 `execute_run` ทำตามลำดับ example, statistics, schema, validate, transform, train, evaluate, blessing, push หรือ skip ถ้าสัญญาไม่ผ่านจะไม่มีการเทรน DAG ใน `dags/rain_train.py` เรียงงานเดียวกัน และแยกสาขา pusher กับ skip_push
 
 คนอื่นรันจากเครื่องเปล่าตาม README: สร้าง virtualenv, `pip install -e ".[dev]"`, `python scripts/download_data.py`, แล้ว `python -m rainguard.cli run` เวอร์ชันไลบรารีถูกล็อกใน `requirements.txt`
 
-รีโป git ของโครงงานอยู่ที่โฟลเดอร์ `project/rainguard` งานถูกแยกเป็น branch `feature/data-contract`, `feature/training-registry` และ `feature/serving-monitoring` แล้ว merge เข้า `main` แบบ no-fast-forward เครื่องนี้ไม่มี GitHub CLI จึงยังเปิด pull request บนโฮสต์ไม่ได้ เมื่อมี remote แล้วเปิด pull request จากสาม branch นี้ได้ ไฟล์ข้อมูลดิบ 30 MB, `mlruns` และ `artifacts` ไม่ถูกคอมมิต ผู้รับต้องดาวน์โหลดข้อมูลแล้วรันคำสั่งเดียวเพื่อสร้างโมเดลเอง
+รีโปที่ส่งอยู่ที่ https://github.com/ppppppwaqrd/CP413008-rainguard สาขา `main`
+
+Pull Request ที่ merge แล้ว
+
+- https://github.com/ppppppwaqrd/CP413008-rainguard/pull/1 สัญญาข้อมูลและตัวแปลงร่วม
+- https://github.com/ppppppwaqrd/CP413008-rainguard/pull/2 การเทรน ทะเบียนโมเดล และ DAG ของ Airflow
+- https://github.com/ppppppwaqrd/CP413008-rainguard/pull/3 API การเฝ้าระวัง CI และรายงาน
+- https://github.com/ppppppwaqrd/CP413008-rainguard/pull/4 ผล latency จาก API ในคอนเทนเนอร์
+
+Pull Request ที่ไม่ merge เป็นหลักฐานรอบที่ CI ไม่ผ่าน: https://github.com/ppppppwaqrd/CP413008-rainguard/pull/5
+
+ไฟล์ข้อมูลดิบ 30 MB, `mlruns` และ `artifacts` ไม่ถูกคอมมิต ผู้รับต้องดาวน์โหลดข้อมูลแล้วรันคำสั่งเดียวเพื่อสร้างโมเดลเอง โมเดลที่เสิร์ฟตอนสาธิตถูก mount จากเครื่องที่วัด ไม่ได้อยู่ใน git
 
 ## 8. สคริปต์นำเสนอ 12 นาที
 
